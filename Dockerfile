@@ -1,21 +1,19 @@
-FROM node:18-alpine
+# Build stage
+FROM node:22.3.0-alpine AS build
 
-# Set environment variables
-ENV BLUEBIRD_WARNINGS=0 \
-  NODE_ENV=production \
-  NODE_NO_WARNINGS=1 \
-  NPM_CONFIG_LOGLEVEL=warn \
-  SUPPRESS_NO_CONFIG_WARNING=true
-
-# Install dependencies
+WORKDIR /app
 COPY package.json ./
 RUN npm install --no-optional
+COPY . .
+RUN npm run build
 
-# Copy the application code
-COPY . /app
+# Runtime stage
+FROM node:22.3.0-alpine
 
-# Expose the port
+WORKDIR /app
+COPY --from=build /app/dist .
+
+ENV NODE_ENV=production
+
 EXPOSE 3000
-
-# Start the application
-CMD ["node", "/app/app.js"]
+CMD ["node", "index.js"]
