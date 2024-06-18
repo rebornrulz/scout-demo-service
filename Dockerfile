@@ -18,6 +18,6 @@ RUN  apk add --no-cache npm \
  
 COPY . /app
 
-CMD ["node","/app/app.js"]
+CMD ["/bin/sh"]
 
 EXPOSE 3000
