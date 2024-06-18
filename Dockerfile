@@ -1,23 +1,21 @@
-FROM alpine:3.20@sha256:eb3e4e175ba6d212ba1d6e04fc0782916c08e1c9d7b45892e9796141b1d379ae
+FROM node:18-alpine
 
+# Set environment variables
 ENV BLUEBIRD_WARNINGS=0 \
   NODE_ENV=production \
   NODE_NO_WARNINGS=1 \
   NPM_CONFIG_LOGLEVEL=warn \
   SUPPRESS_NO_CONFIG_WARNING=true
 
-RUN apk add --no-cache \
-  nodejs
-
+# Install dependencies
 COPY package.json ./
+RUN npm install --no-optional
 
-RUN  apk add --no-cache npm \
- && npm i --no-optional \
- && npm cache clean --force \
- && apk del npm
- 
+# Copy the application code
 COPY . /app
 
-CMD "node","/app/app.js"/bin/sh"]
-
+# Expose the port
 EXPOSE 3000
+
+# Start the application
+CMD ["node", "/app/app.js"]
