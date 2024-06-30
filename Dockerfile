@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Set environment variables
 ENV BLUEBIRD_WARNINGS=0 \
